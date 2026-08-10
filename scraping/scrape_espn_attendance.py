@@ -3,6 +3,40 @@ import time
 import requests
 from io import StringIO
 
+espn_to_wikipedia_full_names = {
+    "Bulls": "Chicago Bulls",
+    "Cavaliers": "Cleveland Cavaliers",
+    "76ers": "Philadelphia 76ers",
+    "Raptors": "Toronto Raptors",
+    "Mavericks": "Dallas Mavericks",
+    "Heat": "Miami Heat",
+    "Warriors": "Golden State Warriors",
+    "Trail Blazers": "Portland Trail Blazers",
+    "NY Knicks": "New York Knicks",
+    "Lakers": "Los Angeles Lakers",
+    "Celtics": "Boston Celtics",
+    "Spurs": "San Antonio Spurs",
+    "Thunder": "Oklahoma City Thunder",
+    "Wizards": "Washington Wizards",
+    "Jazz": "Utah Jazz",
+    "Rockets": "Houston Rockets",
+    "Magic": "Orlando Magic",
+    "Kings": "Sacramento Kings",
+    "Pistons": "Detroit Pistons",
+    "Nuggets": "Denver Nuggets",
+    "Timberwolves": "Minnesota Timberwolves",
+    "Clippers": "Los Angeles Clippers",
+    "Suns": "Phoenix Suns",
+    "Bucks": "Milwaukee Bucks",
+    "Pelicans": "New Orleans Pelicans",
+    "Hornets": "Charlotte Hornets",
+    "Pacers": "Indiana Pacers",
+    "Grizzlies": "Memphis Grizzlies",
+    "Nets": "Brooklyn Nets",
+    "Hawks": "Atlanta Hawks"
+
+}
+
 def scrape_year(year):
     url = f"https://www.espn.com/nba/attendance/_/year/{year}"
     
@@ -90,6 +124,8 @@ def scrape_arenas():
 if __name__ == "__main__":
     all_years = scrape_multiple_years(2018, 2025)
     combined = pd.concat(all_years, ignore_index=True)
+    combined['TEAM'] = combined['TEAM'].map(espn_to_wikipedia_full_names)
+    #print(combined['TEAM'].isna().sum()) 
     arenas = scrape_arenas()
     
     #print(combined.head())          # quick sanity check in the terminal
