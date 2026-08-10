@@ -12,6 +12,7 @@ def scrape_year(year):
     tables = pd.read_html(url)
     df = tables[0]
     
+    df.to_csv(f"data/raw/espn_{year}_raw.csv", index=False) 
     # TODO: add a column so you know which season each row belongs to
     
     # TODO: drop junk rows — look for rows where TEAM is not a real team name
@@ -25,6 +26,8 @@ def scrape_year(year):
 
     df.columns = ['RK', 'TEAM', 'HOME_GMS', 'HOME_TOTAL', 'HOME_AVG', 'HOME_PCT',
                 'ROAD_GMS', 'ROAD_AVG', 'ROAD_PCT', 'ALL_GMS', 'ALL_AVG', 'ALL_PCT']  
+    
+    df = df.drop(columns=['HOME_PCT', 'ROAD_PCT', 'ALL_PCT'])
     df['season'] = year
     # Keep only rows where TEAM is in your list of real team names
     real_teams = ['Bulls', 'Mavericks', '76ers', 'Heat', 'NY Knicks', 'Nuggets', 
@@ -64,6 +67,9 @@ def scrape_arenas():
     
     tables = pd.read_html(StringIO(response.text))
     df = tables[0]
+    df.to_csv('data/raw/nba_arenas_raw.csv', index=False) 
+    df = df.drop(columns=['Image', 'Ref'])
+    df.to_csv('data/processed/nba_arenas_clean.csv', index=False)
     
     print(df.columns.tolist())
     print(df.head(10))
@@ -82,15 +88,15 @@ def scrape_arenas():
 # then inspect the result before saving — check for the 2025 zero-values
 # problem and the broken PCT columns before trusting anything
 if __name__ == "__main__":
-    #all_years = scrape_multiple_years(2018, 2025)
-    #combined = pd.concat(all_years, ignore_index=True)
+    all_years = scrape_multiple_years(2018, 2025)
+    combined = pd.concat(all_years, ignore_index=True)
     arenas = scrape_arenas()
     
     #print(combined.head())          # quick sanity check in the terminal
     #print(combined.shape)           # how many rows/columns you ended up with
     #print(combined['TEAM'].unique())
     #print(combined['season'].value_counts())
-    #combined.to_csv("data/raw/espn_attendance_raw.csv", index=False)
+    combined.to_csv("data/processed/espn_attendance_processed.csv", index=False)
     #print("Saved to data/raw/espn_attendance_raw.csv")
     #print(arenas.head())
     #print(arenas.shape())
