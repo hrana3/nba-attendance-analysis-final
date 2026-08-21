@@ -36,9 +36,13 @@ def build_final_espn_table(espn_df, team_ids):
 
 merged_arenas = build_final_arenas_table(arenas_df, team_ids)
 merged_espn = build_final_espn_table(espn_df, team_ids)
-
+#convert floating point type to integer to address type error in psql
+merged_arenas['season_start'] = merged_arenas['season_start'].astype('Int64')
+merged_arenas['season_end'] = merged_arenas['season_end'].astype('Int64')
+arenas_final = merged_arenas.to_csv('data/processed/arenas_final.csv', index=False)
+espn_final = merged_espn.to_csv('data/processed/espn_final.csv', index=False)
 #print(merged_espn.head(40))
 #print(len(espn_df), len(merged_espn))
 #print(merged_arenas['team_id'].isna().sum())
-print(merged_arenas.columns.tolist())
-print(merged_espn.columns.tolist())
+#print(merged_arenas.columns.tolist())
+#print(merged_espn.columns.tolist())
